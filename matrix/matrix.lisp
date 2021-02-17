@@ -18,7 +18,7 @@
 ; Transpose returns the transpose of the 2D matrix mat.
 (defun transpose (matrix)
     ;; TODO: Incomplete function
-    (list 'incomplete)
+    (apply #'mapcar #'list matrix))
 )
 
 ; AreNeighbors returns true iff a and b are neighbors in the 2D
