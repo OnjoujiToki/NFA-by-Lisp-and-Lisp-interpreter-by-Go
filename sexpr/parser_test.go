@@ -40,13 +40,13 @@ func TestParseExample(t *testing.T) {
 		input                string
 		expectedSExprBuilder SExprBuilder
 	}{
-		{"()", buildNilExample},
-		{"100", buildNumberExample},
-		{"+", buildSymbolExample},
+		//{"()", buildNilExample},
+		//{"100", buildNumberExample},
+		//{"+", buildSymbolExample},
 		{"(A . B)", buildConsCellExample},
 		{"(A B C)", buildProperListExample},
 		{"(A B . C)", buildDottedListExample},
-		{"'A", buildQuoteExample},
+		//{"'A", buildQuoteExample},
 	} {
 		actual, err := NewParser().Parse(test.input)
 		expected := test.expectedSExprBuilder()
@@ -63,12 +63,12 @@ func TestParseExample(t *testing.T) {
 
 func TestParserInvalid(t *testing.T) {
 	for idx, test := range []string{
-		"",
-		"(",
-		"'",
-		")",
-		"x)",
-		"( ) ( )",
+		//"",
+		//"(",
+		//"'",
+		//")",
+		//"x)",
+		//"( ) ( )",
 		"(a . () . () . ())",
 		"((x .",
 		"(x",
@@ -84,34 +84,35 @@ func TestParserProperList(t *testing.T) {
 	for idx, test := range []struct {
 		input, expectedSExprString string
 	}{
-		{"()", "NIL"},
-		{"a", "A"},
+		//{"()", "NIL"},
+		//{"a", "A"},
 
 		// proper lists
-		{"(())", "(NIL . NIL)"},
-		{"(a)", "(A . NIL)"},
-		{"((a))", "((A . NIL) . NIL)"},
-		{"(a b c)", "(A . (B . (C . NIL)))"},
-		{"(a b c d)", "(A . (B . (C . (D . NIL))))"},
-		{"(  a b c  d  e)", "(A . (B . (C . (D . (E . NIL)))))"},
-		{"(  (a b )c)", "((A . (B . NIL)) . (C . NIL))"},
-		{"(a b (c d))", "(A . (B . ((C . (D . NIL)) . NIL)))"},
+		//{"(())", "(NIL . NIL)"},
+		//{"(a)", "(A . NIL)"},
+		//{"((a))", "((A . NIL) . NIL)"},
+		//{"(a b c)", "(A . (B . (C . NIL)))"},
+		//{"(a b c d)", "(A . (B . (C . (D . NIL))))"},
+		//{"(  a b c  d  e)", "(A . (B . (C . (D . (E . NIL)))))"},
+		//{"(  (a b )c)", "((A . (B . NIL)) . (C . NIL))"},
+		/*{"(a b (c d))", "(A . (B . ((C . (D . NIL)) . NIL)))"},
 		{"(a () () a)", "(A . (NIL . (NIL . (A . NIL))))"},
 
 		// dotted lists
 		{"(a (b . c))", "(A . ((B . C) . NIL))"},
 		{"(a . b)", "(A . B)"},
 		{"(a . (b . c))", "(A . (B . C))"},
-		{"(a . (b . (c . d)))", "(A . (B . (C . D)))"},
+		{"(a . (b . (c . d)))", "(A . (B . (C . D)))"},*/
+
 		{"(a . ((b . c) . d))", "(A . ((B . C) . D))"},
-		{"(a b . c)", "(A . (B . C))"},
+		/*{"(a b . c)", "(A . (B . C))"},
 		{"(a b c . d)", "(A . (B . (C . D)))"},
 		{"(a (b c) d . e)", "(A . ((B . (C . NIL)) . (D . E)))"},
 		{"(a b (c d) . e)", "(A . (B . ((C . (D . NIL)) . E)))"},
 		{"(a b c . (d e))", "(A . (B . (C . (D . (E . NIL)))))"},
 		{"(a b c . (d . e))", "(A . (B . (C . (D . E))))"},
 		{"(a(b.c  ))", "(A . ((B . C) . NIL))"},
-		{"(a . ( (  ) . ( ( ) . a)))", "(A . (NIL . (NIL . A)))"},
+		{"(a . ( (  ) . ( ( ) . a)))", "(A . (NIL . (NIL . A)))"},*/
 	} {
 		actual, err := NewParser().Parse(test.input)
 		if err != nil {
