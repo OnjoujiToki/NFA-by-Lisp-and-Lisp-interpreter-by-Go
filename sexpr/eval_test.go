@@ -141,9 +141,10 @@ func TestEvalCAR(t *testing.T) {
 	for idx, test := range []struct {
 		input, expected string
 	}{
-		// {"(CAR NIL)", "NIL"},
+		{"(CAR NIL)", "NIL"},
 		{"(CAR '(1 2))", "1"},
 		{"(CAR '(1 . 2))", "1"},
+		{"(CAR '(NIL 2 3))", "NIL"},
 	} {
 		p := NewParser()
 		sexpr, err := p.Parse(test.input)
