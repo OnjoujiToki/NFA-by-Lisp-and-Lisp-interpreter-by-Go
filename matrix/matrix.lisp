@@ -1,12 +1,4 @@
-; A list is a 1-D array of numbers.
-; A matrix is a 2-D array of numbers, stored in row-major order.
-
-; If needed, you may define helper functions here.
-
-; AreAdjacent returns true iff a and b are adjacent in lst.
 (defun  are-adjacent (lst a b)
-    (let ((x 0)))
-    (setf x (length lst))
     ;;(format t "~A" x)
     (if (< (length lst) 2 )
         nil
@@ -18,13 +10,25 @@
 ; Transpose returns the transpose of the 2D matrix mat.
 (defun transpose (matrix)
     ;; TODO: Incomplete function
-    (apply #'mapcar #'list matrix))
+    (apply 'mapcar 'list matrix)
 )
 
 ; AreNeighbors returns true iff a and b are neighbors in the 2D
 ; matrix mat.
+(defun are-neighbors-vertical (matrix a b)
+    (cond ((are-adjacent (car matrix) a b) T)
+          ((eql (length matrix) 1) nil)
+          ( t  (are-neighbors-vertical (cdr matrix) a b))  )
+        
+    )
 (defun are-neighbors (matrix a b)
-    ;; TODO: Incomplete function
-    (list 'incomplete)
-)
-
+    (cond ((are-neighbors-vertical matrix a b) T)
+          ((are-neighbors-vertical (transpose matrix) a b) T)
+          ( t  NIL)  )
+        
+   
+    
+    
+    )
+;;(print (are-adjacent '(1 2 3) 1 3))
+(print (are-neighbors '( (1 2 3) (4 5 6) ) 1 2))
