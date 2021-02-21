@@ -24,16 +24,24 @@
 (defun contains (lst target)
     (cond ((eql (length lst) 0) nil) ((eql (car lst) target) T) (t (contains (cdr lst) target))) )     
     
-
+(defun not-equal (a b) 
+    (if (equal a b) nil
+        T
+    )
+    
+)
 (defun reachable (transition start final input)
-     (setf cur start)
-     (print (funcall transition cur (car input)))
-     (if (null input) (if (eql cur 0) 4 )
-       (reachable transition start cur (cdr input)))
+     ;;(setf cur start)
+     ;;(funcall transition start (car input))
+    
+     (cond ((equal (funcall transition start (car input)) ') nil) (t T))    
+     ;;(if (null input) (if (eql start final) T nil)
+      ;; (reachable transition (+ start 1) final (cdr input)))
    
 )
 
 ;;(print (fooTransitions 0 'B))
 ;;(print (fooTransitions 0 'A))
-(print (reachable 'expTransitions 0 2 '(A B A)))
-(print (contains '(1 2 3) 1))
+(print (reachable 'expTransitions 0 3 '(3 B A)))
+;;(print (contains '(1 2 3) 1))
+;;(print (not-equal '(nil) ) )
