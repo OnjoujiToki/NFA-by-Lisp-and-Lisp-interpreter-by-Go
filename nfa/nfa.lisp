@@ -53,15 +53,22 @@
     
 )
 
-(defun reachable-bc (transitition lst)
-    nil)
+
 (defun reachable (transition start final input)
      ;;(setf cur start)
      ;;(funcall transition start (car input))
        
      (cond 
          ((null input) (if (eql start final) T ))
-         ( (not-empty (funcall transition start (car input))) (reachable transition (car (funcall transition start (car input))) final (cdr input) )) 
+         ;;( (not-empty (funcall transition start (car input))) (reachable transition (car (funcall transition start (car input))) final (cdr input) )) 
+         
+         ( (not-empty (funcall transition start (car input))) ;;situation that there is a path then check every path
+              (setq paths  (funcall transition start (car input)))
+                
+              (cond ((reachable transition (car paths) final (cdr input) ) T) (t (reachable transition (second paths) final (cdr input) )))
+          
+          ) 
+         
          (t nil)
       )    
       
@@ -76,6 +83,21 @@
    ;; (assert-equal NIL (reachable 'fooTransitions 0 3 '(A A A)))
   ;;  (assert-equal T (reachable 'fooTransitions 0 3 '(A C)))
 ;;;;;;;;;;;;;;;
+
+(print (reachable 'fooTransitions 0 3 '(A B C))) ;; nil
+(print (reachable 'fooTransitions 0 3 '(A B ))) ;; T
+(print (reachable 'fooTransitions 0 3 '(A A A ))) ;; NIL
+(print (reachable 'fooTransitions 0 3 '(A C ))) ;; T
+
+
+(print (reachable 'expTransitions 0 0 NIL))
+(print (reachable 'expTransitions 0 2 '(B B)))
+(print (reachable 'expTransitions 0 1 '(A B A)))
+(print (reachable 'expTransitions 0 2 '(A B)))
+(print (reachable 'expTransitions 0 2 '(A B A)))
+
+
+
 (print (reachable 'langTransitions 0 0 NIL)) ;; T
 (print (reachable 'langTransitions 0 1 '(B))) ;; T
 (print (reachable 'langTransitions 0 0 '( A A A))) ;;T
