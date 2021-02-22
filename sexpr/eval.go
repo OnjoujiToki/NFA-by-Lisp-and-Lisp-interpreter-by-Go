@@ -68,6 +68,13 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 	}
 
 	if funcName(expr) == "QUOTE" {
+		if expr.cdr.cdr == nil {
+			return nil, ErrEval
+		}
+		if !expr.cdr.cdr.isNil() {
+			return nil, ErrEval
+		}
+
 		if expr.cdr.isNil() {
 			return nil, ErrEval
 		}

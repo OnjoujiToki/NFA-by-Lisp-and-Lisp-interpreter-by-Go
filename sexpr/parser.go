@@ -126,7 +126,10 @@ func getSExpr(lexer *lexer) (*SExpr, error) {
 		if err == ErrGetDot {
 			next, suberr := getSExprInPair(lexer)
 			if suberr == ErrGetLP {
-				temp1, _ := getSExpr(lexer)
+				temp1, suberr := getSExpr(lexer)
+				if suberr != nil {
+					return nil, ErrParser
+				}
 				temp.car = temp1.car
 				temp.cdr = temp1.cdr
 				temp.atom = temp1.atom
@@ -138,6 +141,9 @@ func getSExpr(lexer *lexer) (*SExpr, error) {
 				}
 
 			} else if suberr != ErrParser {
+				if next == nil {
+					return nil, ErrParser
+				}
 				temp.atom = next.atom
 				temp.car = next.car
 				temp.cdr = next.cdr
