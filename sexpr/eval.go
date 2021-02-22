@@ -145,6 +145,16 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 		return mkNumber(r), nil
 	}
 
+	if funcName(expr) == "ZEROP" {
+		first, _ := expr.cdr.car.Eval()
+		y := big.NewInt(0)
+		if first.atom.num.Cmp(y) == 0 {
+			return mkSymbolTrue(), nil
+		} else {
+			return mkNil(), nil
+		}
+	}
+
 	if funcName(expr) == "LENGTH" {
 		r := big.NewInt(0)
 		temp := expr.cdr.car.cdr.car
