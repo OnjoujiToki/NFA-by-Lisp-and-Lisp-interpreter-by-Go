@@ -63,12 +63,12 @@ func TestParseExample(t *testing.T) {
 
 func TestParserInvalid(t *testing.T) {
 	for idx, test := range []string{
-		//"",
-		//"(",
-		//"'",
-		//")",
-		//"x)",
-		//"( ) ( )",
+		"",
+		"(",
+		"'",
+		")",
+		"x)",
+		"( ) ( )",
 		"(a . () . () . ())",
 		"((x .",
 		"(x",
@@ -85,7 +85,7 @@ func TestParserProperList(t *testing.T) {
 		input, expectedSExprString string
 	}{
 		{"()", "NIL"},
-		//{"a", "A"},
+		{"a", "A"},
 
 		// proper lists
 

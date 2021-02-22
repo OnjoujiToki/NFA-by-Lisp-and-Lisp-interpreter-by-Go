@@ -64,37 +64,88 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 		if expr.isNumber() {
 			return expr, nil
 		}
+		return nil, ErrEval
 	}
 
 	if funcName(expr) == "QUOTE" {
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+
 		return expr.cdr.car, nil
 	}
 
 	if funcName(expr) == "CAR" {
-
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
 		if expr.cdr.car.isNil() {
 			return mkNil(), nil
 		}
+		if expr.cdr.car.isAtom() {
+			return nil, ErrEval
+		}
+		if expr.cdr.car.cdr.car.isNil() {
+			return nil, ErrEval
+		}
+		if !expr.cdr.cdr.isNil() {
+			return nil, ErrEval
+		}
+
 		return expr.cdr.car.cdr.car.car, nil
 	}
 
 	if funcName(expr) == "CDR" {
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
 
 		if expr.cdr.car.isNil() {
 			return mkNil(), nil
+		}
+		if expr.cdr.car.isAtom() {
+			return nil, ErrEval
+		}
+		if expr.cdr.car.cdr.car.isNil() {
+			return nil, ErrEval
 		}
 		return expr.cdr.car.cdr.car.cdr, nil
 	}
 
 	if funcName(expr) == "CONS" {
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+
+		if expr.cdr.car == nil || expr.cdr.cdr.car == nil {
+			return nil, ErrEval
+		}
+
 		first, _ := expr.cdr.car.Eval()
 		second, _ := expr.cdr.cdr.car.Eval()
+
+		if expr.cdr.cdr.cdr.car != nil {
+			return nil, ErrEval
+		}
+
+		if first == nil || second == nil {
+			return nil, ErrEval
+		}
 
 		return mkConsCell(first, second), nil
 	}
 
 	if funcName(expr) == "ATOM" {
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+		if !expr.cdr.cdr.isNil() {
+			return nil, ErrEval
+		}
 		first, _ := expr.cdr.car.Eval()
+		if first == nil {
+			return nil, ErrEval
+		}
 		if first.car != nil || first.cdr != nil {
 			return mkNil(), nil
 		} else {
@@ -102,7 +153,16 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 		}
 	}
 	if funcName(expr) == "LISTP" {
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+		if !expr.cdr.cdr.isNil() {
+			return nil, ErrEval
+		}
 		first, _ := expr.cdr.car.Eval()
+		if first == nil {
+			return nil, ErrEval
+		}
 		if first.atom == nil {
 			return mkSymbolTrue(), nil
 		} else {
@@ -117,7 +177,14 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 			return mkNumber(r), nil
 		}
 		for true {
-			add, _ := temp.car.Eval()
+			number, _ := temp.car.Eval()
+			if number == nil {
+				return nil, ErrEval
+			}
+			if !number.isNumber() {
+				return nil, ErrEval
+			}
+			add := number
 			r.Add(r, add.atom.num)
 			temp = temp.cdr
 			if temp.isNil() {
@@ -135,7 +202,15 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 			return mkNumber(r), nil
 		}
 		for true {
-			add, _ := temp.car.Eval()
+			number, _ := temp.car.Eval()
+			if number == nil {
+				return nil, ErrEval
+			}
+			if !number.isNumber() {
+				return nil, ErrEval
+			}
+			add := number
+
 			r.Mul(r, add.atom.num)
 			temp = temp.cdr
 			if temp.isNil() {
@@ -146,7 +221,20 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 	}
 
 	if funcName(expr) == "ZEROP" {
+
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+		if !expr.cdr.cdr.isNil() {
+			return nil, ErrEval
+		}
 		first, _ := expr.cdr.car.Eval()
+		if first == nil {
+			return nil, ErrEval
+		}
+		if first.isNil() {
+			return nil, ErrEval
+		}
 		y := big.NewInt(0)
 		if first.atom.num.Cmp(y) == 0 {
 			return mkSymbolTrue(), nil
@@ -156,14 +244,28 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 	}
 
 	if funcName(expr) == "LENGTH" {
+
+		if expr.cdr.isNil() {
+			return nil, ErrEval
+		}
+
 		r := big.NewInt(0)
+		if expr.cdr.car == nil || expr.cdr.car.cdr == nil {
+			return nil, ErrEval
+		}
 		temp := expr.cdr.car.cdr.car
+		if temp == nil {
+			return nil, ErrEval
+		}
 		if temp.isNil() {
 			return mkNumber(r), nil
 		}
 		for true {
 			r.Add(r, big.NewInt(1))
 			temp = temp.cdr
+			if temp == nil {
+				return nil, ErrEval
+			}
 			if temp.isNil() {
 				break
 			}
@@ -172,5 +274,5 @@ func (expr *SExpr) Eval() (*SExpr, error) {
 
 	}
 
-	return mkNil(), nil
+	return nil, ErrEval
 }
