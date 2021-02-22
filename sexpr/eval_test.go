@@ -14,7 +14,7 @@ func TestEvalInvalid(t *testing.T) {
 		"(QUOTE . 1)",
 		"(QUOTE . (1 . 2))",
 		"(QUOTE 1 2)",
-		//"(QUOTE . (1 . 'NIL))",
+		"(QUOTE . (1 . 'NIL))",
 		"(CAR)",
 		"(CAR x)",
 		"(CAR '(1 2) '1)",

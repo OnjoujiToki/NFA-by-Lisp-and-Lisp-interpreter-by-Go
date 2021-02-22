@@ -40,8 +40,8 @@ func TestParseExample(t *testing.T) {
 		input                string
 		expectedSExprBuilder SExprBuilder
 	}{
-		//{"()", buildNilExample},
-		//{"100", buildNumberExample},
+		{"()", buildNilExample},
+		{"100", buildNumberExample},
 		{"+", buildSymbolExample},
 		{"(A . B)", buildConsCellExample},
 		{"(A B C)", buildProperListExample},
@@ -72,6 +72,7 @@ func TestParserInvalid(t *testing.T) {
 		"(a . () . () . ())",
 		"((x .",
 		"(x",
+		"(/",
 	} {
 		_, err := NewParser().Parse(test)
 		if err == nil {

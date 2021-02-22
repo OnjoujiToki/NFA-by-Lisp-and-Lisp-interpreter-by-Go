@@ -12,32 +12,12 @@ import (
 // and // https://golang.org/pkg/builtin/#error
 var ErrEval = errors.New("eval error")
 
-func deepth(expr *SExpr) int {
-	deepth := 1
-	temp := expr
-	for true {
-		deepth++
-		if (temp.cdr).isNil() {
-			break
-		}
-		temp = temp.cdr
-	}
-	return deepth
-}
 func single(expr *SExpr) bool {
 	if expr.atom != nil {
 		return true
 	} else {
 		return false
 	}
-}
-
-func (expr *SExpr) CDR() *SExpr {
-	return expr.cdr
-}
-
-func CAR(expr *SExpr) *SExpr {
-	return expr.car
 }
 
 func singleName(expr *SExpr) string {
