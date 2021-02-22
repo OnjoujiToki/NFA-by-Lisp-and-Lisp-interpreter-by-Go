@@ -67,6 +67,9 @@ func getSExprInPair(lexer *lexer) (*SExpr, error) {
 func mkQuote(lexer *lexer) (*SExpr, error) {
 	quoteHead := mkSymbol("QUOTE")
 	val, err := getSExprInPair(lexer)
+	if err == ErrParser {
+		return nil, err
+	}
 
 	if err == ErrGetLP {
 		quoteList, suberr := getSExpr(lexer)
@@ -211,7 +214,16 @@ func (myParserInstance) Parse(s string) (*SExpr, error) {
 	if tok.typ == tokenLpar {
 		r, err := getSExpr(lexer)
 		if err == nil {
-			return r, nil
+			subtok, suberr := lexer.next()
+			if suberr != nil {
+				return nil, ErrParser
+			}
+			if subtok.typ == tokenEOF {
+				return r, nil
+			} else {
+				return nil, ErrParser
+			}
+
 		} else {
 			return nil, ErrParser
 		}
